@@ -14,24 +14,24 @@ type General struct {
 }
 
 // Dims returns the matrix dimensions.
-func (g *General) Dims() (r, c int) {
-	r, c = g.Rows, g.Cols
+func (m *General) Dims() (r, c int) {
+	r, c = m.Rows, m.Cols
 	return
 }
 
 // At returns the value at a given row, column index.
-func (g *General) At(r, c int) float64 {
-	return g.Data[r*g.Stride+c]
+func (m *General) At(r, c int) float64 {
+	return m.Data[r*m.Stride+c]
 }
 
 // Set changes the value at a given row, column index.
-func (g *General) Set(r, c int, v float64) {
-	g.Data[r*g.Stride+c] = v
+func (m *General) Set(r, c int, v float64) {
+	m.Data[r*m.Stride+c] = v
 }
 
 // Vector returns all of the values in the matrix as a []float64, in row order.
-func (g *General) Vector() []float64 {
-	v := make([]float64, len(g.Data))
-	copy(v, g.Data)
+func (m *General) Vector() []float64 {
+	v := make([]float64, len(m.Data))
+	copy(v, m.Data)
 	return v
 }
