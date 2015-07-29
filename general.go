@@ -31,5 +31,7 @@ func (g *General) Set(r, c int, v float64) {
 
 // Vector returns all of the values in the matrix as a []float64, in row order.
 func (g *General) Vector() []float64 {
-	return g.Data
+	v := make([]float64, len(g.Data))
+	copy(v, g.Data)
+	return v
 }

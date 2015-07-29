@@ -13,7 +13,7 @@ func TestGeneral(t *testing.T) {
 	g := General{blas64.General{
 		Rows:   3,
 		Cols:   3,
-		Stride: 1,
+		Stride: 3,
 		Data: []float64{
 			1, 2, 3,
 			4, 5, 6,
