@@ -14,10 +14,7 @@ type Matrix interface {
 	Dims() (r, c int)        // matrix dimensions
 	At(r, c int) float64     // get a value from a given row, column index
 	Set(r, c int, v float64) // set a value at a given row, column index
-	Vector() []float64       // returns all of the values in the matrix as a []float64, in row order
-
-	Row(int) []float64 // returns the given row as a Vector
-	Col(int) []float64 // returns the given column as a vector
+	Vector() []float64       // vector returns all of the values in the matrix as a []float64, in row order
 
 	// Matrix Algebra
 	T() Matrix             // transpose
