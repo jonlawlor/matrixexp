@@ -41,6 +41,7 @@ func (m1 *T) Vector() []float64 {
 	return v
 }
 
+// Eval returns a matrix literal.
 func (m1 *T) Eval() Matrix {
 	r, c := m1.Dims()
 	v := m1.Vector()
@@ -52,10 +53,12 @@ func (m1 *T) Eval() Matrix {
 	}}
 }
 
+// T transposes a matrix.
 func (m1 *T) T() Matrix {
 	return m1.M
 }
 
+// Add two matrices together.
 func (m1 *T) Add(m2 Matrix) Matrix {
 	return &Add{
 		Left:  m1,
@@ -63,6 +66,7 @@ func (m1 *T) Add(m2 Matrix) Matrix {
 	}
 }
 
+// Sub subtracts the right matrix from the left matrix.
 func (m1 *T) Sub(m2 Matrix) Matrix {
 	return &Sub{
 		Left:  m1,
@@ -70,6 +74,7 @@ func (m1 *T) Sub(m2 Matrix) Matrix {
 	}
 }
 
+// Mul performs matrix multiplication.
 func (m1 *T) Mul(m2 Matrix) Matrix {
 	return &Mul{
 		Left:  m1,
@@ -77,6 +82,7 @@ func (m1 *T) Mul(m2 Matrix) Matrix {
 	}
 }
 
+// MulElem performs element-wise multiplication.
 func (m1 *T) MulElem(m2 Matrix) Matrix {
 	return &MulElem{
 		Left:  m1,
@@ -84,6 +90,7 @@ func (m1 *T) MulElem(m2 Matrix) Matrix {
 	}
 }
 
+// DivElem performs element-wise division.
 func (m1 *T) DivElem(m2 Matrix) Matrix {
 	return &DivElem{
 		Left:  m1,

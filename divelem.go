@@ -8,6 +8,7 @@ import (
 	"github.com/gonum/blas/blas64"
 )
 
+// DivElem represents element-wise division.
 type DivElem struct {
 	Left  Matrix
 	Right Matrix
@@ -34,6 +35,7 @@ func (m1 *DivElem) Vector() []float64 {
 	return v1
 }
 
+// Eval returns a matrix literal.
 func (m1 *DivElem) Eval() Matrix {
 	r, c := m1.Dims()
 	v := m1.Vector()
@@ -45,10 +47,12 @@ func (m1 *DivElem) Eval() Matrix {
 	}}
 }
 
+// T transposes a matrix.
 func (m1 *DivElem) T() Matrix {
 	return &T{m1}
 }
 
+// Add two matrices together.
 func (m1 *DivElem) Add(m2 Matrix) Matrix {
 	return &Add{
 		Left:  m1,
@@ -56,6 +60,7 @@ func (m1 *DivElem) Add(m2 Matrix) Matrix {
 	}
 }
 
+// Sub subtracts the right matrix from the left matrix.
 func (m1 *DivElem) Sub(m2 Matrix) Matrix {
 	return &Sub{
 		Left:  m1,
@@ -63,6 +68,7 @@ func (m1 *DivElem) Sub(m2 Matrix) Matrix {
 	}
 }
 
+// Mul performs matrix multiplication.
 func (m1 *DivElem) Mul(m2 Matrix) Matrix {
 	return &Mul{
 		Left:  m1,
@@ -70,6 +76,7 @@ func (m1 *DivElem) Mul(m2 Matrix) Matrix {
 	}
 }
 
+// MulElem performs element-wise multiplication.
 func (m1 *DivElem) MulElem(m2 Matrix) Matrix {
 	return &MulElem{
 		Left:  m1,
@@ -77,6 +84,7 @@ func (m1 *DivElem) MulElem(m2 Matrix) Matrix {
 	}
 }
 
+// DivElem performs element-wise division.
 func (m1 *DivElem) DivElem(m2 Matrix) Matrix {
 	return &DivElem{
 		Left:  m1,
