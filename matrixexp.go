@@ -10,11 +10,17 @@ package matrixexp
 // Matrix represents any mathematical matrix, and defines its Algebra.
 type Matrix interface {
 
-	// not algebra, but very helpful
-	Dims() (r, c int)        // matrix dimensions
-	At(r, c int) float64     // get a value from a given row, column index
-	Set(r, c int, v float64) // set a value at a given row, column index
-	Vector() []float64       // vector returns all of the values in the matrix as a []float64, in row order
+	// not a part of the algebra, but very helpful
+	Dims() (r, c int)    // matrix dimensions
+	At(r, c int) float64 // get a value from a given row, column index
+	Vector() []float64   // vector returns all of the values in the matrix as a []float64, in row order
+
+	Eval() Matrix // Evaluates the matrix expression, producing a Matrix literal.
+
+	// Originally Set was also a member of the Matrix method set, but then what
+	// happens when you set (for example) a value in an Add Expression?  It is
+	// clear that Set does not apply to all matrices, only to the ones with a
+	// literal representation.
 
 	// Matrix Algebra
 	T() Matrix             // transpose
@@ -23,5 +29,5 @@ type Matrix interface {
 	Mul(Matrix) Matrix     // matrix multiplication
 	MulElem(Matrix) Matrix // element-wise multiplication
 	DivElem(Matrix) Matrix // element-wise division
-	Inv() Matrix           // matrix inversion
+	// Inv() Matrix           // matrix inversion
 }
