@@ -29,26 +29,18 @@ func (m1 *General) Set(r, c int, v float64) {
 	m1.Data[r*m1.Stride+c] = v
 }
 
-// Vector returns all of the values in the matrix as a []float64, in row order.
-func (m1 *General) Vector() []float64 {
-	// TODO(jonlawlor): make use of a pool.
-	v := make([]float64, len(m1.Data))
-	copy(v, m1.Data)
-	return v
-}
-
 // Eval returns a matrix literal.
-func (m1 *General) Eval() Matrix {
+func (m1 *General) Eval() MatrixLiteral {
 	return m1
 }
 
 // T transposes a matrix.
-func (m1 *General) T() Matrix {
+func (m1 *General) T() MatrixExpr {
 	return &T{m1}
 }
 
 // Add two matrices together.
-func (m1 *General) Add(m2 Matrix) Matrix {
+func (m1 *General) Add(m2 MatrixExpr) MatrixExpr {
 	return &Add{
 		Left:  m1,
 		Right: m2,
@@ -56,7 +48,7 @@ func (m1 *General) Add(m2 Matrix) Matrix {
 }
 
 // Sub subtracts the right matrix from the left matrix.
-func (m1 *General) Sub(m2 Matrix) Matrix {
+func (m1 *General) Sub(m2 MatrixExpr) MatrixExpr {
 	return &Sub{
 		Left:  m1,
 		Right: m2,
@@ -64,7 +56,7 @@ func (m1 *General) Sub(m2 Matrix) Matrix {
 }
 
 // Mul performs matrix multiplication.
-func (m1 *General) Mul(m2 Matrix) Matrix {
+func (m1 *General) Mul(m2 MatrixExpr) MatrixExpr {
 	return &Mul{
 		Left:  m1,
 		Right: m2,
@@ -72,7 +64,7 @@ func (m1 *General) Mul(m2 Matrix) Matrix {
 }
 
 // MulElem performs element-wise multiplication.
-func (m1 *General) MulElem(m2 Matrix) Matrix {
+func (m1 *General) MulElem(m2 MatrixExpr) MatrixExpr {
 	return &MulElem{
 		Left:  m1,
 		Right: m2,
@@ -80,9 +72,22 @@ func (m1 *General) MulElem(m2 Matrix) Matrix {
 }
 
 // DivElem performs element-wise division.
-func (m1 *General) DivElem(m2 Matrix) Matrix {
+func (m1 *General) DivElem(m2 MatrixExpr) MatrixExpr {
 	return &DivElem{
 		Left:  m1,
 		Right: m2,
 	}
+}
+
+// Vector returns all of the values in the matrix as a []float64, in row order.
+func (m1 *General) AsVector() []float64 {
+	// TODO(jonlawlor): make use of a pool.
+	v := make([]float64, len(m1.Data))
+	copy(v, m1.Data)
+	return v
+}
+
+// Vector returns all of the values in the matrix as a []float64, in row order.
+func (m1 *General) AsGeneral() blas64.General {
+	return m1.General
 }

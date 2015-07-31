@@ -10,8 +10,8 @@ import (
 
 // DivElem represents element-wise division.
 type DivElem struct {
-	Left  Matrix
-	Right Matrix
+	Left  MatrixExpr
+	Right MatrixExpr
 }
 
 // Dims returns the matrix dimensions.
@@ -25,35 +25,31 @@ func (m1 *DivElem) At(r, c int) float64 {
 	return m1.Left.At(r, c) / m1.Right.At(r, c)
 }
 
-// Vector returns all of the values in the matrix as a []float64, in row order.
-func (m1 *DivElem) Vector() []float64 {
-	v1 := m1.Left.Vector()
-	v2 := m1.Right.Vector()
+// Eval returns a matrix literal.
+func (m1 *DivElem) Eval() MatrixLiteral {
+	r, c := m1.Dims()
+
+	v1 := m1.Left.Eval().AsVector()
+	v2 := m1.Right.Eval().AsVector()
 	for i, v := range v2 {
 		v1[i] /= v
 	}
-	return v1
-}
 
-// Eval returns a matrix literal.
-func (m1 *DivElem) Eval() Matrix {
-	r, c := m1.Dims()
-	v := m1.Vector()
 	return &General{blas64.General{
 		Rows:   r,
 		Cols:   c,
 		Stride: c,
-		Data:   v,
+		Data:   v1,
 	}}
 }
 
 // T transposes a matrix.
-func (m1 *DivElem) T() Matrix {
+func (m1 *DivElem) T() MatrixExpr {
 	return &T{m1}
 }
 
 // Add two matrices together.
-func (m1 *DivElem) Add(m2 Matrix) Matrix {
+func (m1 *DivElem) Add(m2 MatrixExpr) MatrixExpr {
 	return &Add{
 		Left:  m1,
 		Right: m2,
@@ -61,7 +57,7 @@ func (m1 *DivElem) Add(m2 Matrix) Matrix {
 }
 
 // Sub subtracts the right matrix from the left matrix.
-func (m1 *DivElem) Sub(m2 Matrix) Matrix {
+func (m1 *DivElem) Sub(m2 MatrixExpr) MatrixExpr {
 	return &Sub{
 		Left:  m1,
 		Right: m2,
@@ -69,7 +65,7 @@ func (m1 *DivElem) Sub(m2 Matrix) Matrix {
 }
 
 // Mul performs matrix multiplication.
-func (m1 *DivElem) Mul(m2 Matrix) Matrix {
+func (m1 *DivElem) Mul(m2 MatrixExpr) MatrixExpr {
 	return &Mul{
 		Left:  m1,
 		Right: m2,
@@ -77,7 +73,7 @@ func (m1 *DivElem) Mul(m2 Matrix) Matrix {
 }
 
 // MulElem performs element-wise multiplication.
-func (m1 *DivElem) MulElem(m2 Matrix) Matrix {
+func (m1 *DivElem) MulElem(m2 MatrixExpr) MatrixExpr {
 	return &MulElem{
 		Left:  m1,
 		Right: m2,
@@ -85,7 +81,7 @@ func (m1 *DivElem) MulElem(m2 Matrix) Matrix {
 }
 
 // DivElem performs element-wise division.
-func (m1 *DivElem) DivElem(m2 Matrix) Matrix {
+func (m1 *DivElem) DivElem(m2 MatrixExpr) MatrixExpr {
 	return &DivElem{
 		Left:  m1,
 		Right: m2,

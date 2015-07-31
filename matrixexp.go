@@ -7,15 +7,18 @@
 
 package matrixexp
 
-// Matrix represents any mathematical matrix, and defines its Algebra.
-type Matrix interface {
+import (
+	"github.com/gonum/blas/blas64"
+)
+
+// MatrixExpr represents any mathematical matrix expression, and defines its Algebra.
+type MatrixExpr interface {
 
 	// not a part of the algebra, but very helpful
 	Dims() (r, c int)    // matrix dimensions
 	At(r, c int) float64 // get a value from a given row, column index
-	Vector() []float64   // vector returns all of the values in the matrix as a []float64, in row order
 
-	Eval() Matrix // Evaluates the matrix expression, producing a Matrix literal.
+	Eval() MatrixLiteral // Evaluates the matrix expression, producing a Matrix literal.
 
 	// Originally Set was also a member of the Matrix method set, but then what
 	// happens when you set (for example) a value in an Add Expression?  It is
@@ -23,11 +26,19 @@ type Matrix interface {
 	// literal representation.
 
 	// Matrix Algebra
-	T() Matrix             // transpose
-	Add(Matrix) Matrix     // matrix addition
-	Sub(Matrix) Matrix     // matrix subtraction
-	Mul(Matrix) Matrix     // matrix multiplication
-	MulElem(Matrix) Matrix // element-wise multiplication
-	DivElem(Matrix) Matrix // element-wise division
-	// Inv() Matrix           // matrix inversion
+	T() MatrixExpr                 // transpose
+	Add(MatrixExpr) MatrixExpr     // matrix addition
+	Sub(MatrixExpr) MatrixExpr     // matrix subtraction
+	Mul(MatrixExpr) MatrixExpr     // matrix multiplication
+	MulElem(MatrixExpr) MatrixExpr // element-wise multiplication
+	DivElem(MatrixExpr) MatrixExpr // element-wise division
+	// Inv() MatrixExpr           // matrix inversion
+}
+
+// MatrixLiteral is a literal matrix, which can be converted to a blas64.General.
+type MatrixLiteral interface {
+	MatrixExpr
+
+	AsVector() []float64       // vector returns all of the values in the matrix as a []float64, in row order
+	AsGeneral() blas64.General // returns a Matrix as a matrixexpr.General
 }
