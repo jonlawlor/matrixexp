@@ -8,6 +8,8 @@ import (
 	"github.com/gonum/blas/blas64"
 )
 
+// NewFuture constructs a Future MatrixLiteral from a Matrix Expression and
+// then begins evaluating it.
 func NewFuture(M MatrixExpr) *Future {
 	ch := make(chan struct{})
 	F := &Future{
