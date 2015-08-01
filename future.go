@@ -12,7 +12,10 @@ import (
 // then begins evaluating it.
 func NewFuture(M MatrixExpr) *Future {
 	ch := make(chan struct{})
+	r, c := M.Dims()
 	F := &Future{
+		r:  r,
+		c:  c,
 		ch: ch,
 		m:  nil,
 	}
@@ -25,14 +28,15 @@ func NewFuture(M MatrixExpr) *Future {
 
 // Future is a matrix literal that is asynchronously evaluating.
 type Future struct {
-	ch <-chan struct{}
-	m  MatrixLiteral
+	r, c int
+	ch   <-chan struct{}
+	m    MatrixLiteral
 }
 
 // Dims returns the matrix dimensions.
 func (m1 *Future) Dims() (r, c int) {
-	<-m1.ch
-	r, c = m1.m.Dims()
+	r = m1.r
+	c = m1.c
 	return
 }
 

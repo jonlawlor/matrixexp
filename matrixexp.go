@@ -43,3 +43,25 @@ type MatrixLiteral interface {
 	AsGeneral() blas64.General // returns a Matrix as a matrixexpr.General
 	Set(r, c int, v float64)   // set a specific row, column to value
 }
+
+// Equals determines if two matrices are equal.
+func Equals(m1, m2 MatrixExpr) bool {
+	r1, c1 := m1.Dims()
+	r2, c2 := m2.Dims()
+
+	if r1 != r2 || c1 != c2 {
+		return false
+	}
+	mv1 := m1.Eval()
+	mv2 := m2.Eval()
+
+	v1 := mv1.AsVector()
+	v2 := mv2.AsVector()
+	for i, v := range v1 {
+		if v2[i] != v {
+			return false
+		}
+	}
+	return true
+
+}
