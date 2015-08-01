@@ -29,8 +29,11 @@ func (m1 *DivElem) At(r, c int) float64 {
 func (m1 *DivElem) Eval() MatrixLiteral {
 	r, c := m1.Dims()
 
-	v1 := m1.Left.Eval().AsVector()
-	v2 := m1.Right.Eval().AsVector()
+	lm := m1.Left.Eval()
+	rm := m1.Right.Eval()
+
+	v1 := lm.AsVector()
+	v2 := rm.AsVector()
 	for i, v := range v2 {
 		v1[i] /= v
 	}

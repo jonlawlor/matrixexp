@@ -37,9 +37,12 @@ func (m1 *Mul) Eval() MatrixLiteral {
 
 	// This should be replaced with a call to Eval on each side, and then a type
 	// switch to handle the various matrix literals.
-	left := m1.Left.Eval().AsGeneral()
-	right := m1.Right.Eval().AsGeneral()
 
+	lm := m1.Left.Eval()
+	rm := m1.Right.Eval()
+
+	left := lm.AsGeneral()
+	right := rm.AsGeneral()
 	r, c := m1.Dims()
 	m := blas64.General{
 		Rows:   r,
