@@ -41,4 +41,5 @@ type MatrixLiteral interface {
 
 	AsVector() []float64       // vector returns all of the values in the matrix as a []float64, in row order
 	AsGeneral() blas64.General // returns a Matrix as a matrixexpr.General
+	Set(r, c int, v float64)   // set a specific row, column to value
 }

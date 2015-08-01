@@ -8,39 +8,56 @@ import (
 	"github.com/gonum/blas/blas64"
 )
 
-// General is a typical matrix literal.
-type General struct {
-	blas64.General
+func NewFuture(M MatrixExpr) *Future {
+	ch := make(chan struct{})
+	F := &Future{
+		ch: ch,
+		m:  nil,
+	}
+	go func(M MatrixExpr, F *Future, ch chan<- struct{}) {
+		F.m = M.Eval()
+		close(ch)
+	}(M, F, ch)
+	return F
+}
+
+// Future is a matrix literal that is asynchronously evaluating.
+type Future struct {
+	ch <-chan struct{}
+	m  MatrixLiteral
 }
 
 // Dims returns the matrix dimensions.
-func (m1 *General) Dims() (r, c int) {
-	r, c = m1.Rows, m1.Cols
+func (m1 *Future) Dims() (r, c int) {
+	<-m1.ch
+	r, c = m1.m.Dims()
 	return
 }
 
 // At returns the value at a given row, column index.
-func (m1 *General) At(r, c int) float64 {
-	return m1.Data[r*m1.Stride+c]
+func (m1 *Future) At(r, c int) float64 {
+	<-m1.ch
+	return m1.m.At(r, c)
 }
 
 // Set changes the value at a given row, column index.
-func (m1 *General) Set(r, c int, v float64) {
-	m1.Data[r*m1.Stride+c] = v
+func (m1 *Future) Set(r, c int, v float64) {
+	<-m1.ch
+	m1.m.Set(r, c, v)
 }
 
 // Eval returns a matrix literal.
-func (m1 *General) Eval() MatrixLiteral {
+func (m1 *Future) Eval() MatrixLiteral {
 	return m1
 }
 
 // T transposes a matrix.
-func (m1 *General) T() MatrixExpr {
+func (m1 *Future) T() MatrixExpr {
 	return &T{m1}
 }
 
 // Add two matrices together.
-func (m1 *General) Add(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) Add(m2 MatrixExpr) MatrixExpr {
 	return &Add{
 		Left:  m1,
 		Right: m2,
@@ -48,7 +65,7 @@ func (m1 *General) Add(m2 MatrixExpr) MatrixExpr {
 }
 
 // Sub subtracts the right matrix from the left matrix.
-func (m1 *General) Sub(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) Sub(m2 MatrixExpr) MatrixExpr {
 	return &Sub{
 		Left:  m1,
 		Right: m2,
@@ -56,7 +73,7 @@ func (m1 *General) Sub(m2 MatrixExpr) MatrixExpr {
 }
 
 // Mul performs matrix multiplication.
-func (m1 *General) Mul(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) Mul(m2 MatrixExpr) MatrixExpr {
 	return &Mul{
 		Left:  m1,
 		Right: m2,
@@ -64,7 +81,7 @@ func (m1 *General) Mul(m2 MatrixExpr) MatrixExpr {
 }
 
 // MulElem performs element-wise multiplication.
-func (m1 *General) MulElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) MulElem(m2 MatrixExpr) MatrixExpr {
 	return &MulElem{
 		Left:  m1,
 		Right: m2,
@@ -72,7 +89,7 @@ func (m1 *General) MulElem(m2 MatrixExpr) MatrixExpr {
 }
 
 // DivElem performs element-wise division.
-func (m1 *General) DivElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) DivElem(m2 MatrixExpr) MatrixExpr {
 	return &DivElem{
 		Left:  m1,
 		Right: m2,
@@ -80,14 +97,13 @@ func (m1 *General) DivElem(m2 MatrixExpr) MatrixExpr {
 }
 
 // AsVector returns a copy of the values in the matrix as a []float64, in row order.
-func (m1 *General) AsVector() []float64 {
-	// TODO(jonlawlor): make use of a pool.
-	v := make([]float64, len(m1.Data))
-	copy(v, m1.Data)
-	return v
+func (m1 *Future) AsVector() []float64 {
+	<-m1.ch
+	return m1.m.AsVector()
 }
 
 // AsGeneral returns the matrix as a blas64.General (not a copy!)
-func (m1 *General) AsGeneral() blas64.General {
-	return m1.General
+func (m1 *Future) AsGeneral() blas64.General {
+	<-m1.ch
+	return m1.m.AsGeneral()
 }
