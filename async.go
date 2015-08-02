@@ -27,7 +27,7 @@ func (m1 *Async) Eval() MatrixLiteral {
 
 // T transposes a matrix.
 func (m1 *Async) T() MatrixExpr {
-	return m1.M
+	return &T{m1}
 }
 
 // Add two matrices together.

@@ -354,18 +354,66 @@ func init() {
 // TestGeneral evaluates matrix expressions to compare their output with the
 // expected output.
 func TestGeneral(t *testing.T) {
-	for i, tt := range TestFixtures {
+	for ti, tt := range TestFixtures {
 		m := tt.expr
 		r, c := m.Dims()
 		if r != tt.r {
-			t.Errorf("%d: %s rows are %d, want %d", i, tt.name, r, tt.r)
+			t.Errorf("%d: %s rows are %d, want %d", ti, tt.name, r, tt.r)
 		}
 		if c != tt.c {
-			t.Errorf("%d: %s columns are %d, want %d", i, tt.name, c, tt.c)
+			t.Errorf("%d: %s columns are %d, want %d", ti, tt.name, c, tt.c)
 		}
 		want := &General{tt.want}
 		if got := m.Eval(); !Equals(got, want) {
-			t.Errorf("%d: %s equals %v, want %v", i, tt.name, got, want)
+			t.Errorf("%d: %s equals %v, want %v", ti, tt.name, got, want)
+		}
+		for i := 0; i < r; i++ {
+			for j := 0; j < c; j++ {
+				wantat := want.Data[i*want.Stride+j]
+				if gotat := m.At(i, j); gotat != wantat {
+					t.Errorf("%d: %s At(%d,%d) equals %v, want %v", ti, tt.name, i, j, gotat, wantat)
+				}
+			}
+		}
+		if matLit, ok := tt.expr.(MatrixLiteral); ok {
+			want := -10.0
+			matLit.Set(0, 0, want)
+			if got := matLit.At(0, 0); want != got {
+				t.Errorf("%d: %s Set(%d,%d,%v) equals %v, want %v", ti, tt.name, 0, 0, want, got, want)
+			}
+		}
+	}
+}
+
+// TestEquals checks that the equals function returns false when two matrices are different.
+func TestEquals(t *testing.T) {
+	for ti, tt := range []struct {
+		m1, m2 MatrixExpr
+		eq     bool
+	}{
+		{
+			m1: GeneralZeros(1, 1),
+			m2: GeneralZeros(1, 1),
+			eq: true,
+		},
+		{
+			m1: GeneralZeros(1, 1),
+			m2: GeneralZeros(1, 10),
+			eq: false,
+		},
+		{
+			m1: GeneralZeros(10, 1),
+			m2: GeneralZeros(1, 1),
+			eq: false,
+		},
+		{
+			m1: GeneralZeros(1, 1),
+			m2: GeneralOnes(1, 1),
+			eq: false,
+		},
+	} {
+		if v := Equals(tt.m1, tt.m2); v != tt.eq {
+			t.Errorf("%d: Equals(%v,%v) equals %v, want %v", ti, tt.m1, tt.m2, tt.eq, v)
 		}
 	}
 }
