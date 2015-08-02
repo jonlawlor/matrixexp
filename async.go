@@ -11,13 +11,13 @@ type Async struct {
 
 // Dims returns the matrix dimensions.
 func (m1 *Async) Dims() (r, c int) {
-	c, r = m1.M.Dims()
+	r, c = m1.M.Dims()
 	return
 }
 
 // At returns the value at a given row, column index.
 func (m1 *Async) At(r, c int) float64 {
-	return m1.M.At(c, r)
+	return m1.M.At(r, c)
 }
 
 // Eval returns a matrix literal.
