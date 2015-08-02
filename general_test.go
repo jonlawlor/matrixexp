@@ -343,7 +343,7 @@ func MutateFixtures(fix1, fix2 []MatrixFixture) []MatrixFixture {
 // matrix expressions.
 func init() {
 	f := GeneralMatrices
-	for level := 0; level < 1; level++ {
+	for level := 0; level < 2; level++ {
 		mf := MutateFixtures(f, f)
 		f = append(f, mf...)
 	}
