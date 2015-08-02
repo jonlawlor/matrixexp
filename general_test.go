@@ -5,6 +5,7 @@
 package matrixexp
 
 import (
+	"fmt"
 	"github.com/gonum/blas"
 	"github.com/gonum/blas/blas64"
 	"math/rand"
@@ -274,6 +275,32 @@ func SubGenerator(a, b MatrixFixture) *MatrixFixture {
 	return m
 }
 
+// ScaleGenerator creates a scale expression by multiplying by 2.
+func ScaleGenerator(a MatrixFixture) *MatrixFixture {
+	// We could also construct this with a generator generator and use different
+	// scaling constants, but come on.
+	C := 2.0
+
+	wantData := make([]float64, len(a.want.Data))
+	for i := range a.want.Data {
+		wantData[i] = a.want.Data[i] * C
+	}
+
+	m := &MatrixFixture{
+		name: fmt.Sprintf("%f", C) + "*(" + a.name + ")'",
+		r:    a.r,
+		c:    a.c,
+		expr: a.expr.Scale(C),
+		want: blas64.General{
+			Rows:   a.r,
+			Cols:   a.c,
+			Stride: a.c,
+			Data:   wantData,
+		},
+	}
+	return m
+}
+
 // TransposeGenerator creates a transpose expression.
 func TransposeGenerator(a MatrixFixture) *MatrixFixture {
 
@@ -312,6 +339,7 @@ var UnaryGenerators = []UnaryExpr{
 	AsyncGenerator,
 	CopyGenerator,
 	FutureGenerator,
+	ScaleGenerator,
 	TransposeGenerator,
 }
 

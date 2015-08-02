@@ -30,6 +30,7 @@ type MatrixExpr interface {
 	T() MatrixExpr                 // transpose
 	Add(MatrixExpr) MatrixExpr     // matrix addition
 	Sub(MatrixExpr) MatrixExpr     // matrix subtraction
+	Scale(float64) MatrixExpr      // scalar multiplication
 	Mul(MatrixExpr) MatrixExpr     // matrix multiplication
 	MulElem(MatrixExpr) MatrixExpr // element-wise multiplication
 	DivElem(MatrixExpr) MatrixExpr // element-wise division

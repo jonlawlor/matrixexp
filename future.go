@@ -92,6 +92,14 @@ func (m1 *Future) Sub(m2 MatrixExpr) MatrixExpr {
 	}
 }
 
+// Scale performs scalar multiplication.
+func (m1 *Future) Scale(c float64) MatrixExpr {
+	return &Scale{
+		C: c,
+		M: m1,
+	}
+}
+
 // Mul performs matrix multiplication.
 func (m1 *Future) Mul(m2 MatrixExpr) MatrixExpr {
 	return &Mul{
