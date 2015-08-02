@@ -291,19 +291,19 @@ func TransposeGenerator(a MatrixFixture) *MatrixFixture {
 // more complicated expressions.
 var GeneralMatrices = []MatrixFixture{
 	{name: "General 1x1 zeros", r: 1, c: 1, expr: GeneralZeros(1, 1), want: zeros(1, 1)},
-	{name: "General 10x1 zeros", r: 10, c: 1, expr: GeneralZeros(10, 1), want: zeros(10, 1)},
-	{name: "General 1x10 zeros", r: 1, c: 10, expr: GeneralZeros(1, 10), want: zeros(1, 10)},
-	{name: "General 10x10 zeros", r: 10, c: 10, expr: GeneralZeros(10, 10), want: zeros(10, 10)},
+	{name: "General 5x1 zeros", r: 5, c: 1, expr: GeneralZeros(5, 1), want: zeros(5, 1)},
+	{name: "General 1x5 zeros", r: 1, c: 5, expr: GeneralZeros(1, 5), want: zeros(1, 5)},
+	{name: "General 5x5 zeros", r: 5, c: 5, expr: GeneralZeros(5, 5), want: zeros(5, 5)},
 
 	{name: "General 1x1 ones", r: 1, c: 1, expr: GeneralOnes(1, 1), want: ones(1, 1)},
-	{name: "General 10x1 ones", r: 10, c: 1, expr: GeneralOnes(10, 1), want: ones(10, 1)},
-	{name: "General 1x10 ones", r: 1, c: 10, expr: GeneralOnes(1, 10), want: ones(1, 10)},
-	{name: "General 10x10 ones", r: 10, c: 10, expr: GeneralOnes(10, 10), want: ones(10, 10)},
+	{name: "General 5x1 ones", r: 5, c: 1, expr: GeneralOnes(5, 1), want: ones(5, 1)},
+	{name: "General 1x5 ones", r: 1, c: 5, expr: GeneralOnes(1, 5), want: ones(1, 5)},
+	{name: "General 5x5 ones", r: 5, c: 5, expr: GeneralOnes(5, 5), want: ones(5, 5)},
 
 	{name: "General 1x1 normal rand", r: 1, c: 1, expr: GeneralRand(1, 1), want: rnd(1, 1)},
-	{name: "General 10x1 normal rand", r: 10, c: 1, expr: GeneralRand(10, 1), want: rnd(10, 1)},
-	{name: "General 1x10 normal rand", r: 1, c: 10, expr: GeneralRand(1, 10), want: rnd(1, 10)},
-	{name: "General 10x10 normal rand", r: 10, c: 10, expr: GeneralRand(10, 10), want: rnd(10, 10)},
+	{name: "General 5x1 normal rand", r: 5, c: 1, expr: GeneralRand(5, 1), want: rnd(5, 1)},
+	{name: "General 1x5 normal rand", r: 1, c: 5, expr: GeneralRand(1, 5), want: rnd(1, 5)},
+	{name: "General 5x5 normal rand", r: 5, c: 5, expr: GeneralRand(5, 5), want: rnd(5, 5)},
 }
 
 // UnaryGenerators are the set of unary expressions to be applied to mutate the
