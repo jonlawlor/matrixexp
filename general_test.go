@@ -162,6 +162,18 @@ func AsyncGenerator(a MatrixFixture) *MatrixFixture {
 	return m
 }
 
+// CopyGenerator creates a copy of an expression.
+func CopyGenerator(a MatrixFixture) *MatrixFixture {
+	m := &MatrixFixture{
+		name: "Copy(" + a.name + ")",
+		r:    a.r,
+		c:    a.c,
+		expr: a.expr.Copy(),
+		want: a.want,
+	}
+	return m
+}
+
 // DivElemGenerator creates a DivElem expression.
 func DivElemGenerator(a, b MatrixFixture) *MatrixFixture {
 	if a.r != b.r || a.c != b.c {
@@ -298,6 +310,7 @@ var GeneralMatrices = []MatrixFixture{
 // set of test fixtures.
 var UnaryGenerators = []UnaryExpr{
 	AsyncGenerator,
+	CopyGenerator,
 	FutureGenerator,
 	TransposeGenerator,
 }
@@ -353,7 +366,8 @@ func init() {
 
 // TestGeneral evaluates matrix expressions to compare their output with the
 // expected output.
-func TestGeneral(t *testing.T) {
+func TestDims(t *testing.T) {
+	t.Parallel()
 	for ti, tt := range TestFixtures {
 		m := tt.expr
 		r, c := m.Dims()
@@ -363,10 +377,26 @@ func TestGeneral(t *testing.T) {
 		if c != tt.c {
 			t.Errorf("%d: %s columns are %d, want %d", ti, tt.name, c, tt.c)
 		}
+	}
+}
+
+func TestEval(t *testing.T) {
+	t.Parallel()
+	for ti, tt := range TestFixtures {
+		m := tt.expr
 		want := &General{tt.want}
 		if got := m.Eval(); !Equals(got, want) {
 			t.Errorf("%d: %s equals %v, want %v", ti, tt.name, got, want)
 		}
+	}
+}
+
+func TestAt(t *testing.T) {
+	t.Parallel()
+	for ti, tt := range TestFixtures {
+		m := tt.expr
+		r, c := m.Dims()
+		want := &General{tt.want}
 		for i := 0; i < r; i++ {
 			for j := 0; j < c; j++ {
 				wantat := want.Data[i*want.Stride+j]
@@ -375,7 +405,15 @@ func TestGeneral(t *testing.T) {
 				}
 			}
 		}
-		if matLit, ok := tt.expr.(MatrixLiteral); ok {
+	}
+}
+
+func TestSet(t *testing.T) {
+	t.Parallel()
+	for ti, tt := range TestFixtures {
+		m := tt.expr
+		if matLit, ok := m.(MatrixLiteral); ok {
+			matLit = matLit.Copy().Eval()
 			want := -10.0
 			matLit.Set(0, 0, want)
 			if got := matLit.At(0, 0); want != got {
@@ -387,6 +425,7 @@ func TestGeneral(t *testing.T) {
 
 // TestEquals checks that the equals function returns false when two matrices are different.
 func TestEquals(t *testing.T) {
+	t.Parallel()
 	for ti, tt := range []struct {
 		m1, m2 MatrixExpr
 		eq     bool

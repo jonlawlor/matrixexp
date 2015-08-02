@@ -43,6 +43,13 @@ func (m1 *T) Eval() MatrixLiteral {
 	}}
 }
 
+// Copy creates a (deep) copy of the Matrix Expression.
+func (m1 *T) Copy() MatrixExpr {
+	return &T{
+		M: m1.M.Copy(),
+	}
+}
+
 // T transposes a matrix.
 func (m1 *T) T() MatrixExpr {
 	return m1.M

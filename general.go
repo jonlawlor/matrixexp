@@ -34,6 +34,20 @@ func (m1 *General) Eval() MatrixLiteral {
 	return m1
 }
 
+// Copy creates a (deep) copy of the Matrix Expression.
+func (m1 *General) Copy() MatrixExpr {
+	v := make([]float64, len(m1.Data))
+	copy(v, m1.Data)
+	return &General{
+		blas64.General{
+			Rows:   m1.Rows,
+			Cols:   m1.Cols,
+			Stride: m1.Stride,
+			Data:   v,
+		},
+	}
+}
+
 // T transposes a matrix.
 func (m1 *General) T() MatrixExpr {
 	return &T{m1}

@@ -19,6 +19,7 @@ type MatrixExpr interface {
 	At(r, c int) float64 // get a value from a given row, column index
 
 	Eval() MatrixLiteral // Evaluates the matrix expression, producing a Matrix literal.
+	Copy() MatrixExpr    // creates a (deep) copy of the matrix expression
 
 	// Originally Set was also a member of the Matrix method set, but then what
 	// happens when you set (for example) a value in an Add Expression?  It is

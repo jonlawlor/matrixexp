@@ -57,6 +57,20 @@ func (m1 *Future) Eval() MatrixLiteral {
 	return m1
 }
 
+// Copy creates a (deep) copy of the Matrix Expression.
+func (m1 *Future) Copy() MatrixExpr {
+	//TODO(jonlawlor): handle the case where we want to copy a running job,
+	// maybe with pub/sub?
+	<-m1.ch
+
+	return &Future{
+		r:  m1.r,
+		c:  m1.c,
+		ch: m1.ch,
+		m:  m1.m.Copy().Eval(),
+	}
+}
+
 // T transposes a matrix.
 func (m1 *Future) T() MatrixExpr {
 	return &T{m1}

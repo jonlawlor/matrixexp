@@ -25,6 +25,13 @@ func (m1 *Async) Eval() MatrixLiteral {
 	return NewFuture(m1.M)
 }
 
+// Copy creates a (deep) copy of the Matrix Expression.
+func (m1 *Async) Copy() MatrixExpr {
+	return &Async{
+		M: m1.M.Copy(),
+	}
+}
+
 // T transposes a matrix.
 func (m1 *Async) T() MatrixExpr {
 	return &T{m1}
