@@ -32,6 +32,14 @@ func (m1 *Async) Copy() MatrixExp {
 	}
 }
 
+// Err returns the first error encountered while constructing the matrix expression.
+func (m1 *Async) Err() error {
+	if err := m1.M.Err(); err != nil {
+		return err
+	}
+	return nil
+}
+
 // T transposes a matrix.
 func (m1 *Async) T() MatrixExp {
 	return &T{m1}

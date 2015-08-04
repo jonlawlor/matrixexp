@@ -48,6 +48,26 @@ func (m1 *General) Copy() MatrixExp {
 	}
 }
 
+// Err returns the first error encountered while constructing the matrix expression.
+func (m1 *General) Err() error {
+	if m1.Rows < 0 {
+		return ErrInvalidRows(m1.Rows)
+	}
+	if m1.Cols < 0 {
+		return ErrInvalidCols(m1.Cols)
+	}
+	if m1.Stride < 1 {
+		return ErrInvalidStride(m1.Stride)
+	}
+	if m1.Stride < m1.Cols {
+		return ErrStrideLessThanCols{m1.Stride, m1.Cols}
+	}
+	if maxLen := (m1.Rows-1)*m1.Stride + m1.Cols; maxLen > len(m1.Data) {
+		return ErrInvalidDataLen{len(m1.Data), maxLen}
+	}
+	return nil
+}
+
 // T transposes a matrix.
 func (m1 *General) T() MatrixExp {
 	return &T{m1}

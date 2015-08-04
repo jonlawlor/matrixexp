@@ -54,6 +54,28 @@ func (m1 *Add) Copy() MatrixExp {
 	}
 }
 
+// Err returns the first error encountered while constructing the matrix expression.
+func (m1 *Add) Err() error {
+	if err := m1.Left.Err(); err != nil {
+		return err
+	}
+	if err := m1.Right.Err(); err != nil {
+		return err
+	}
+
+	r1, c1 := m1.Left.Dims()
+	r2, c2 := m1.Right.Dims()
+	if r1 != r2 || c1 != c2 {
+		return ErrDimMismatch{
+			R1: r1,
+			C1: c1,
+			R2: r2,
+			C2: c2,
+		}
+	}
+	return nil
+}
+
 // T transposes a matrix.
 func (m1 *Add) T() MatrixExp {
 	return &T{m1}

@@ -21,6 +21,8 @@ type MatrixExp interface {
 	Eval() MatrixLiteral // Evaluates the matrix expression, producing a Matrix literal.
 	Copy() MatrixExp     // creates a (deep) copy of the matrix expression
 
+	Err() error // returns the first error encountered while constructing the matrix expression.
+
 	// Originally Set was also a member of the Matrix method set, but then what
 	// happens when you set (for example) a value in an Add Expression?  It is
 	// clear that Set does not apply to all matrices, only to the ones with a

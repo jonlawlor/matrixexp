@@ -71,6 +71,21 @@ func (m1 *Future) Copy() MatrixExp {
 	}
 }
 
+// Err returns the first error encountered while constructing the matrix expression.
+func (m1 *Future) Err() error {
+
+	// This is not ideal.  We can't tell if the matrix is invalid until we have
+	// already calculated it, and by that time it is likely that it will have
+	// panicked.  On the other hand, you should only get a future by Async, so
+	// compiling the matrix expression that generates this future should yield
+	// an error before here.
+	<-m1.ch
+	if err := m1.m.Err(); err != nil {
+		return err
+	}
+	return nil
+}
+
 // T transposes a matrix.
 func (m1 *Future) T() MatrixExp {
 	return &T{m1}
