@@ -35,7 +35,7 @@ func (m1 *General) Eval() MatrixLiteral {
 }
 
 // Copy creates a (deep) copy of the Matrix Expression.
-func (m1 *General) Copy() MatrixExpr {
+func (m1 *General) Copy() MatrixExp {
 	v := make([]float64, len(m1.Data))
 	copy(v, m1.Data)
 	return &General{
@@ -49,12 +49,12 @@ func (m1 *General) Copy() MatrixExpr {
 }
 
 // T transposes a matrix.
-func (m1 *General) T() MatrixExpr {
+func (m1 *General) T() MatrixExp {
 	return &T{m1}
 }
 
 // Add two matrices together.
-func (m1 *General) Add(m2 MatrixExpr) MatrixExpr {
+func (m1 *General) Add(m2 MatrixExp) MatrixExp {
 	return &Add{
 		Left:  m1,
 		Right: m2,
@@ -62,7 +62,7 @@ func (m1 *General) Add(m2 MatrixExpr) MatrixExpr {
 }
 
 // Sub subtracts the right matrix from the left matrix.
-func (m1 *General) Sub(m2 MatrixExpr) MatrixExpr {
+func (m1 *General) Sub(m2 MatrixExp) MatrixExp {
 	return &Sub{
 		Left:  m1,
 		Right: m2,
@@ -70,7 +70,7 @@ func (m1 *General) Sub(m2 MatrixExpr) MatrixExpr {
 }
 
 // Scale performs scalar multiplication.
-func (m1 *General) Scale(c float64) MatrixExpr {
+func (m1 *General) Scale(c float64) MatrixExp {
 	return &Scale{
 		C: c,
 		M: m1,
@@ -78,7 +78,7 @@ func (m1 *General) Scale(c float64) MatrixExpr {
 }
 
 // Mul performs matrix multiplication.
-func (m1 *General) Mul(m2 MatrixExpr) MatrixExpr {
+func (m1 *General) Mul(m2 MatrixExp) MatrixExp {
 	return &Mul{
 		Left:  m1,
 		Right: m2,
@@ -86,7 +86,7 @@ func (m1 *General) Mul(m2 MatrixExpr) MatrixExpr {
 }
 
 // MulElem performs element-wise multiplication.
-func (m1 *General) MulElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *General) MulElem(m2 MatrixExp) MatrixExp {
 	return &MulElem{
 		Left:  m1,
 		Right: m2,
@@ -94,7 +94,7 @@ func (m1 *General) MulElem(m2 MatrixExpr) MatrixExpr {
 }
 
 // DivElem performs element-wise division.
-func (m1 *General) DivElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *General) DivElem(m2 MatrixExp) MatrixExp {
 	return &DivElem{
 		Left:  m1,
 		Right: m2,

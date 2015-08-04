@@ -10,7 +10,7 @@ import (
 
 // NewFuture constructs a Future MatrixLiteral from a Matrix Expression and
 // then begins evaluating it.
-func NewFuture(M MatrixExpr) *Future {
+func NewFuture(M MatrixExp) *Future {
 	ch := make(chan struct{})
 	r, c := M.Dims()
 	F := &Future{
@@ -19,7 +19,7 @@ func NewFuture(M MatrixExpr) *Future {
 		ch: ch,
 		m:  nil,
 	}
-	go func(M MatrixExpr, F *Future, ch chan<- struct{}) {
+	go func(M MatrixExp, F *Future, ch chan<- struct{}) {
 		F.m = M.Eval()
 		close(ch)
 	}(M, F, ch)
@@ -58,7 +58,7 @@ func (m1 *Future) Eval() MatrixLiteral {
 }
 
 // Copy creates a (deep) copy of the Matrix Expression.
-func (m1 *Future) Copy() MatrixExpr {
+func (m1 *Future) Copy() MatrixExp {
 	//TODO(jonlawlor): handle the case where we want to copy a running job,
 	// maybe with pub/sub?
 	<-m1.ch
@@ -72,12 +72,12 @@ func (m1 *Future) Copy() MatrixExpr {
 }
 
 // T transposes a matrix.
-func (m1 *Future) T() MatrixExpr {
+func (m1 *Future) T() MatrixExp {
 	return &T{m1}
 }
 
 // Add two matrices together.
-func (m1 *Future) Add(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) Add(m2 MatrixExp) MatrixExp {
 	return &Add{
 		Left:  m1,
 		Right: m2,
@@ -85,7 +85,7 @@ func (m1 *Future) Add(m2 MatrixExpr) MatrixExpr {
 }
 
 // Sub subtracts the right matrix from the left matrix.
-func (m1 *Future) Sub(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) Sub(m2 MatrixExp) MatrixExp {
 	return &Sub{
 		Left:  m1,
 		Right: m2,
@@ -93,7 +93,7 @@ func (m1 *Future) Sub(m2 MatrixExpr) MatrixExpr {
 }
 
 // Scale performs scalar multiplication.
-func (m1 *Future) Scale(c float64) MatrixExpr {
+func (m1 *Future) Scale(c float64) MatrixExp {
 	return &Scale{
 		C: c,
 		M: m1,
@@ -101,7 +101,7 @@ func (m1 *Future) Scale(c float64) MatrixExpr {
 }
 
 // Mul performs matrix multiplication.
-func (m1 *Future) Mul(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) Mul(m2 MatrixExp) MatrixExp {
 	return &Mul{
 		Left:  m1,
 		Right: m2,
@@ -109,7 +109,7 @@ func (m1 *Future) Mul(m2 MatrixExpr) MatrixExpr {
 }
 
 // MulElem performs element-wise multiplication.
-func (m1 *Future) MulElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) MulElem(m2 MatrixExp) MatrixExp {
 	return &MulElem{
 		Left:  m1,
 		Right: m2,
@@ -117,7 +117,7 @@ func (m1 *Future) MulElem(m2 MatrixExpr) MatrixExpr {
 }
 
 // DivElem performs element-wise division.
-func (m1 *Future) DivElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *Future) DivElem(m2 MatrixExp) MatrixExp {
 	return &DivElem{
 		Left:  m1,
 		Right: m2,

@@ -10,7 +10,7 @@ import (
 
 // T represents a transposed matrix expression.
 type T struct {
-	M MatrixExpr
+	M MatrixExp
 }
 
 // Dims returns the matrix dimensions.
@@ -44,19 +44,19 @@ func (m1 *T) Eval() MatrixLiteral {
 }
 
 // Copy creates a (deep) copy of the Matrix Expression.
-func (m1 *T) Copy() MatrixExpr {
+func (m1 *T) Copy() MatrixExp {
 	return &T{
 		M: m1.M.Copy(),
 	}
 }
 
 // T transposes a matrix.
-func (m1 *T) T() MatrixExpr {
+func (m1 *T) T() MatrixExp {
 	return m1.M
 }
 
 // Add two matrices together.
-func (m1 *T) Add(m2 MatrixExpr) MatrixExpr {
+func (m1 *T) Add(m2 MatrixExp) MatrixExp {
 	return &Add{
 		Left:  m1,
 		Right: m2,
@@ -64,7 +64,7 @@ func (m1 *T) Add(m2 MatrixExpr) MatrixExpr {
 }
 
 // Sub subtracts the right matrix from the left matrix.
-func (m1 *T) Sub(m2 MatrixExpr) MatrixExpr {
+func (m1 *T) Sub(m2 MatrixExp) MatrixExp {
 	return &Sub{
 		Left:  m1,
 		Right: m2,
@@ -72,7 +72,7 @@ func (m1 *T) Sub(m2 MatrixExpr) MatrixExpr {
 }
 
 // Scale performs scalar multiplication.
-func (m1 *T) Scale(c float64) MatrixExpr {
+func (m1 *T) Scale(c float64) MatrixExp {
 	return &Scale{
 		C: c,
 		M: m1,
@@ -80,7 +80,7 @@ func (m1 *T) Scale(c float64) MatrixExpr {
 }
 
 // Mul performs matrix multiplication.
-func (m1 *T) Mul(m2 MatrixExpr) MatrixExpr {
+func (m1 *T) Mul(m2 MatrixExp) MatrixExp {
 	return &Mul{
 		Left:  m1,
 		Right: m2,
@@ -88,7 +88,7 @@ func (m1 *T) Mul(m2 MatrixExpr) MatrixExpr {
 }
 
 // MulElem performs element-wise multiplication.
-func (m1 *T) MulElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *T) MulElem(m2 MatrixExp) MatrixExp {
 	return &MulElem{
 		Left:  m1,
 		Right: m2,
@@ -96,7 +96,7 @@ func (m1 *T) MulElem(m2 MatrixExpr) MatrixExpr {
 }
 
 // DivElem performs element-wise division.
-func (m1 *T) DivElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *T) DivElem(m2 MatrixExp) MatrixExp {
 	return &DivElem{
 		Left:  m1,
 		Right: m2,

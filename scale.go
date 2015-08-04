@@ -11,7 +11,7 @@ import (
 // Scale represents scalar multiplication.
 type Scale struct {
 	C float64
-	M MatrixExpr
+	M MatrixExp
 }
 
 // Dims returns the matrix dimensions.
@@ -44,7 +44,7 @@ func (m1 *Scale) Eval() MatrixLiteral {
 }
 
 // Copy creates a (deep) copy of the Matrix Expression.
-func (m1 *Scale) Copy() MatrixExpr {
+func (m1 *Scale) Copy() MatrixExp {
 	return &Scale{
 		C: m1.C,
 		M: m1.M,
@@ -52,12 +52,12 @@ func (m1 *Scale) Copy() MatrixExpr {
 }
 
 // T transposes a matrix.
-func (m1 *Scale) T() MatrixExpr {
+func (m1 *Scale) T() MatrixExp {
 	return &T{m1}
 }
 
 // Add two matrices together.
-func (m1 *Scale) Add(m2 MatrixExpr) MatrixExpr {
+func (m1 *Scale) Add(m2 MatrixExp) MatrixExp {
 	return &Add{
 		Left:  m1,
 		Right: m2,
@@ -65,7 +65,7 @@ func (m1 *Scale) Add(m2 MatrixExpr) MatrixExpr {
 }
 
 // Sub subtracts the right matrix from the left matrix.
-func (m1 *Scale) Sub(m2 MatrixExpr) MatrixExpr {
+func (m1 *Scale) Sub(m2 MatrixExp) MatrixExp {
 	return &Sub{
 		Left:  m1,
 		Right: m2,
@@ -73,7 +73,7 @@ func (m1 *Scale) Sub(m2 MatrixExpr) MatrixExpr {
 }
 
 // Scale performs scalar multiplication.
-func (m1 *Scale) Scale(c float64) MatrixExpr {
+func (m1 *Scale) Scale(c float64) MatrixExp {
 	return &Scale{
 		C: c * m1.C,
 		M: m1.M,
@@ -81,7 +81,7 @@ func (m1 *Scale) Scale(c float64) MatrixExpr {
 }
 
 // Mul performs matrix multiplication.
-func (m1 *Scale) Mul(m2 MatrixExpr) MatrixExpr {
+func (m1 *Scale) Mul(m2 MatrixExp) MatrixExp {
 	return &Mul{
 		Left:  m1,
 		Right: m2,
@@ -89,7 +89,7 @@ func (m1 *Scale) Mul(m2 MatrixExpr) MatrixExpr {
 }
 
 // MulElem performs element-wise multiplication.
-func (m1 *Scale) MulElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *Scale) MulElem(m2 MatrixExp) MatrixExp {
 	return &MulElem{
 		Left:  m1,
 		Right: m2,
@@ -97,7 +97,7 @@ func (m1 *Scale) MulElem(m2 MatrixExpr) MatrixExpr {
 }
 
 // DivElem performs element-wise division.
-func (m1 *Scale) DivElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *Scale) DivElem(m2 MatrixExp) MatrixExp {
 	return &DivElem{
 		Left:  m1,
 		Right: m2,

@@ -11,15 +11,15 @@ import (
 	"github.com/gonum/blas/blas64"
 )
 
-// MatrixExpr represents any mathematical matrix expression, and defines its Algebra.
-type MatrixExpr interface {
+// MatrixExp represents any mathematical matrix expression, and defines its Algebra.
+type MatrixExp interface {
 
 	// not a part of the algebra, but very helpful
 	Dims() (r, c int)    // matrix dimensions
 	At(r, c int) float64 // get a value from a given row, column index
 
 	Eval() MatrixLiteral // Evaluates the matrix expression, producing a Matrix literal.
-	Copy() MatrixExpr    // creates a (deep) copy of the matrix expression
+	Copy() MatrixExp     // creates a (deep) copy of the matrix expression
 
 	// Originally Set was also a member of the Matrix method set, but then what
 	// happens when you set (for example) a value in an Add Expression?  It is
@@ -27,27 +27,27 @@ type MatrixExpr interface {
 	// literal representation.
 
 	// Matrix Algebra
-	T() MatrixExpr                 // transpose
-	Add(MatrixExpr) MatrixExpr     // matrix addition
-	Sub(MatrixExpr) MatrixExpr     // matrix subtraction
-	Scale(float64) MatrixExpr      // scalar multiplication
-	Mul(MatrixExpr) MatrixExpr     // matrix multiplication
-	MulElem(MatrixExpr) MatrixExpr // element-wise multiplication
-	DivElem(MatrixExpr) MatrixExpr // element-wise division
-	// Inv() MatrixExpr           // matrix inversion
+	T() MatrixExp                // transpose
+	Add(MatrixExp) MatrixExp     // matrix addition
+	Sub(MatrixExp) MatrixExp     // matrix subtraction
+	Scale(float64) MatrixExp     // scalar multiplication
+	Mul(MatrixExp) MatrixExp     // matrix multiplication
+	MulElem(MatrixExp) MatrixExp // element-wise multiplication
+	DivElem(MatrixExp) MatrixExp // element-wise division
+	// Inv() MatrixExp           // matrix inversion
 }
 
 // MatrixLiteral is a literal matrix, which can be converted to a blas64.General.
 type MatrixLiteral interface {
-	MatrixExpr
+	MatrixExp
 
 	AsVector() []float64       // vector returns all of the values in the matrix as a []float64, in row order
-	AsGeneral() blas64.General // returns a Matrix as a matrixexpr.General
+	AsGeneral() blas64.General // returns a Matrix as a MatrixExp.General
 	Set(r, c int, v float64)   // set a specific row, column to value
 }
 
 // Equals determines if two matrices are equal.
-func Equals(m1, m2 MatrixExpr) bool {
+func Equals(m1, m2 MatrixExp) bool {
 	r1, c1 := m1.Dims()
 	r2, c2 := m2.Dims()
 

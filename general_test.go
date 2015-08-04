@@ -16,7 +16,7 @@ import (
 type MatrixFixture struct {
 	name string         // the name of the fixture
 	r, c int            // expected size of the result
-	expr MatrixExpr     // expression being tested
+	expr MatrixExp      // expression being tested
 	want blas64.General // expected result of the expression
 }
 
@@ -28,7 +28,7 @@ type UnaryExpr func(MatrixFixture) *MatrixFixture
 type BinaryExpr func(MatrixFixture, MatrixFixture) *MatrixFixture
 
 // Functions to help generate example matrix literals.
-func GeneralZeros(r, c int) MatrixExpr {
+func GeneralZeros(r, c int) MatrixExp {
 	return &General{zeros(r, c)}
 }
 func zeros(r, c int) blas64.General {
@@ -40,7 +40,7 @@ func zeros(r, c int) blas64.General {
 	}
 }
 
-func GeneralOnes(r, c int) MatrixExpr {
+func GeneralOnes(r, c int) MatrixExp {
 	return &General{ones(r, c)}
 }
 func ones(r, c int) blas64.General {
@@ -51,7 +51,7 @@ func ones(r, c int) blas64.General {
 	return m
 }
 
-func GeneralRand(r, c int) MatrixExpr {
+func GeneralRand(r, c int) MatrixExp {
 	return &General{rnd(r, c)}
 }
 func rnd(r, c int) blas64.General {
@@ -455,7 +455,7 @@ func TestSet(t *testing.T) {
 func TestEquals(t *testing.T) {
 	t.Parallel()
 	for ti, tt := range []struct {
-		m1, m2 MatrixExpr
+		m1, m2 MatrixExp
 		eq     bool
 	}{
 		{

@@ -6,7 +6,7 @@ package matrixexp
 
 // Async represents a matrix expression that evaluates into a Future.
 type Async struct {
-	M MatrixExpr
+	M MatrixExp
 }
 
 // Dims returns the matrix dimensions.
@@ -26,19 +26,19 @@ func (m1 *Async) Eval() MatrixLiteral {
 }
 
 // Copy creates a (deep) copy of the Matrix Expression.
-func (m1 *Async) Copy() MatrixExpr {
+func (m1 *Async) Copy() MatrixExp {
 	return &Async{
 		M: m1.M.Copy(),
 	}
 }
 
 // T transposes a matrix.
-func (m1 *Async) T() MatrixExpr {
+func (m1 *Async) T() MatrixExp {
 	return &T{m1}
 }
 
 // Add two matrices together.
-func (m1 *Async) Add(m2 MatrixExpr) MatrixExpr {
+func (m1 *Async) Add(m2 MatrixExp) MatrixExp {
 	return &Add{
 		Left:  m1,
 		Right: m2,
@@ -46,7 +46,7 @@ func (m1 *Async) Add(m2 MatrixExpr) MatrixExpr {
 }
 
 // Sub subtracts the right matrix from the left matrix.
-func (m1 *Async) Sub(m2 MatrixExpr) MatrixExpr {
+func (m1 *Async) Sub(m2 MatrixExp) MatrixExp {
 	return &Sub{
 		Left:  m1,
 		Right: m2,
@@ -54,7 +54,7 @@ func (m1 *Async) Sub(m2 MatrixExpr) MatrixExpr {
 }
 
 // Scale performs scalar multiplication.
-func (m1 *Async) Scale(c float64) MatrixExpr {
+func (m1 *Async) Scale(c float64) MatrixExp {
 	return &Scale{
 		C: c,
 		M: m1,
@@ -62,7 +62,7 @@ func (m1 *Async) Scale(c float64) MatrixExpr {
 }
 
 // Mul performs matrix multiplication.
-func (m1 *Async) Mul(m2 MatrixExpr) MatrixExpr {
+func (m1 *Async) Mul(m2 MatrixExp) MatrixExp {
 	return &Mul{
 		Left:  m1,
 		Right: m2,
@@ -70,7 +70,7 @@ func (m1 *Async) Mul(m2 MatrixExpr) MatrixExpr {
 }
 
 // MulElem performs element-wise multiplication.
-func (m1 *Async) MulElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *Async) MulElem(m2 MatrixExp) MatrixExp {
 	return &MulElem{
 		Left:  m1,
 		Right: m2,
@@ -78,7 +78,7 @@ func (m1 *Async) MulElem(m2 MatrixExpr) MatrixExpr {
 }
 
 // DivElem performs element-wise division.
-func (m1 *Async) DivElem(m2 MatrixExpr) MatrixExpr {
+func (m1 *Async) DivElem(m2 MatrixExp) MatrixExp {
 	return &DivElem{
 		Left:  m1,
 		Right: m2,
