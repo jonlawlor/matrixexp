@@ -10,7 +10,7 @@ import (
 
 // Scale represents scalar multiplication.
 type Scale struct {
-	C float64
+	C *float64
 	M MatrixExp
 }
 
@@ -22,7 +22,7 @@ func (m1 *Scale) Dims() (r, c int) {
 
 // At returns the value at a given row, column index.
 func (m1 *Scale) At(r, c int) float64 {
-	return m1.M.At(r, c) * m1.C
+	return m1.M.At(r, c) * *m1.C
 }
 
 // Eval returns a matrix literal.
@@ -31,8 +31,9 @@ func (m1 *Scale) Eval() MatrixLiteral {
 
 	mv := m1.M.Eval()
 	v1 := mv.AsVector()
+	C := *m1.C
 	for i := range v1 {
-		v1[i] *= m1.C
+		v1[i] *= C
 	}
 
 	return &General{blas64.General{
@@ -79,8 +80,10 @@ func (m1 *Scale) Sub(m2 MatrixExp) MatrixExp {
 
 // Scale performs scalar multiplication.
 func (m1 *Scale) Scale(c float64) MatrixExp {
+	C := new(float64)
+	*C = c * *m1.C
 	return &Scale{
-		C: c * m1.C,
+		C: C,
 		M: m1.M,
 	}
 }

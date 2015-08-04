@@ -106,8 +106,11 @@ func (m1 *Future) Sub(m2 MatrixExp) MatrixExp {
 
 // Scale performs scalar multiplication.
 func (m1 *Future) Scale(c float64) MatrixExp {
+	C := new(float64)
+	*C = c
+
 	return &Scale{
-		C: c,
+		C: C,
 		M: m1,
 	}
 }
