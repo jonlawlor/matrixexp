@@ -21,7 +21,7 @@ type MatrixFixture struct {
 }
 
 // UnaryExpr and BinaryExpr are functions used to construct matrix fixtures
-// from other fixtures.  Matrix algebra will generally be a Unary operation
+// from other fixtures.  Matrix algebra will generally be a unary operation
 // (such as transpose, or asynchronous operations) or a binary operation (such
 // as Add, Mul, etc.)
 type UnaryExpr func(MatrixFixture) *MatrixFixture
