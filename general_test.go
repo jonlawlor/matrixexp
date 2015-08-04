@@ -14,10 +14,11 @@ import (
 
 // A MatrixFixture represents a test fixture for a matrix expression.
 type MatrixFixture struct {
-	name string         // the name of the fixture
-	r, c int            // expected size of the result
-	expr MatrixExp      // expression being tested
-	want blas64.General // expected result of the expression
+	name    string         // the name of the fixture
+	r, c    int            // expected size of the result
+	expr    MatrixExp      // expression being tested
+	want    blas64.General // expected result of the expression
+	wanterr error          // expected error, if any.
 }
 
 // UnaryExpr and BinaryExpr are functions used to construct matrix fixtures
@@ -137,7 +138,8 @@ func blastrans(g1 blas64.General) blas64.General {
 
 // AddGenerator creates an Add expression.
 func AddGenerator(a, b MatrixFixture) *MatrixFixture {
-	if a.r != b.r || a.c != b.c {
+	expr := a.expr.Add(b.expr)
+	if expr.Err() != nil {
 		return nil
 	}
 
@@ -145,7 +147,7 @@ func AddGenerator(a, b MatrixFixture) *MatrixFixture {
 		name: "(" + a.name + ") + (" + b.name + ")",
 		r:    a.r,
 		c:    a.c,
-		expr: a.expr.Add(b.expr),
+		expr: expr,
 		want: blasadd(a.want, b.want),
 	}
 	return m
@@ -153,11 +155,16 @@ func AddGenerator(a, b MatrixFixture) *MatrixFixture {
 
 // AsyncGenerator creates an Async expression.
 func AsyncGenerator(a MatrixFixture) *MatrixFixture {
+	expr := &Async{a.expr}
+	if expr.Err() != nil {
+		return nil
+	}
+
 	m := &MatrixFixture{
 		name: "Async(" + a.name + ")",
 		r:    a.r,
 		c:    a.c,
-		expr: &Async{a.expr},
+		expr: expr,
 		want: a.want,
 	}
 	return m
@@ -177,7 +184,8 @@ func CopyGenerator(a MatrixFixture) *MatrixFixture {
 
 // DivElemGenerator creates a DivElem expression.
 func DivElemGenerator(a, b MatrixFixture) *MatrixFixture {
-	if a.r != b.r || a.c != b.c {
+	expr := a.expr.DivElem(b.expr)
+	if expr.Err() != nil {
 		return nil
 	}
 
@@ -194,7 +202,7 @@ func DivElemGenerator(a, b MatrixFixture) *MatrixFixture {
 		name: "(" + a.name + ") ./ (" + b.name + ")",
 		r:    a.r,
 		c:    a.c,
-		expr: a.expr.DivElem(b.expr),
+		expr: expr,
 		want: blas64.General{
 			Rows:   a.r,
 			Cols:   a.c,
@@ -219,7 +227,8 @@ func FutureGenerator(a MatrixFixture) *MatrixFixture {
 
 // MulGenerator creates a Mul expression.
 func MulGenerator(a, b MatrixFixture) *MatrixFixture {
-	if a.c != b.r {
+	expr := a.expr.Mul(b.expr)
+	if expr.Err() != nil {
 		return nil
 	}
 
@@ -227,7 +236,7 @@ func MulGenerator(a, b MatrixFixture) *MatrixFixture {
 		name: "(" + a.name + ") * (" + b.name + ")",
 		r:    a.r,
 		c:    b.c,
-		expr: a.expr.Mul(b.expr),
+		expr: expr,
 		want: blasmul(a.want, b.want),
 	}
 	return m
@@ -235,7 +244,8 @@ func MulGenerator(a, b MatrixFixture) *MatrixFixture {
 
 // MulElemGenerator creates a MulElem expression.
 func MulElemGenerator(a, b MatrixFixture) *MatrixFixture {
-	if a.r != b.r || a.c != b.c {
+	expr := a.expr.MulElem(b.expr)
+	if expr.Err() != nil {
 		return nil
 	}
 
@@ -248,7 +258,7 @@ func MulElemGenerator(a, b MatrixFixture) *MatrixFixture {
 		name: "(" + a.name + ") .* (" + b.name + ")",
 		r:    a.r,
 		c:    a.c,
-		expr: a.expr.MulElem(b.expr),
+		expr: expr,
 		want: blas64.General{
 			Rows:   a.r,
 			Cols:   a.c,
@@ -261,7 +271,8 @@ func MulElemGenerator(a, b MatrixFixture) *MatrixFixture {
 
 // SubGenerator creates a Sub expression.
 func SubGenerator(a, b MatrixFixture) *MatrixFixture {
-	if a.r != b.r || a.c != b.c {
+	expr := a.expr.Sub(b.expr)
+	if expr.Err() != nil {
 		return nil
 	}
 
@@ -269,7 +280,7 @@ func SubGenerator(a, b MatrixFixture) *MatrixFixture {
 		name: "(" + a.name + ") - (" + b.name + ")",
 		r:    a.r,
 		c:    a.c,
-		expr: a.expr.Sub(b.expr),
+		expr: expr,
 		want: blassub(a.want, b.want),
 	}
 	return m
