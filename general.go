@@ -124,7 +124,10 @@ func (m1 *General) DivElem(m2 MatrixExp) MatrixExp {
 // AsVector returns a copy of the values in the matrix as a []float64, in row order.
 func (m1 *General) AsVector() []float64 {
 	// TODO(jonlawlor): make use of a pool.
-	v := make([]float64, len(m1.Data))
+	v := make([]float64, m1.Rows*m1.Cols)
+	for i := 0; i < m1.Rows; i++ {
+		copy(v[i*m1.Cols:(i+1)*m1.Cols], m1.Data[i*m1.Stride:i*m1.Stride+m1.Cols])
+	}
 	copy(v, m1.Data)
 	return v
 }
