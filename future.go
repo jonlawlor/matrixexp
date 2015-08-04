@@ -80,10 +80,7 @@ func (m1 *Future) Err() error {
 	// compiling the matrix expression that generates this future should yield
 	// an error before here.
 	<-m1.ch
-	if err := m1.m.Err(); err != nil {
-		return err
-	}
-	return nil
+	return m1.m.Err()
 }
 
 // T transposes a matrix.

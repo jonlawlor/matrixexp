@@ -53,10 +53,7 @@ func (m1 *Scale) Copy() MatrixExp {
 
 // Err returns the first error encountered while constructing the matrix expression.
 func (m1 *Scale) Err() error {
-	if err := m1.M.Err(); err != nil {
-		return err
-	}
-	return nil
+	return m1.M.Err()
 }
 
 // T transposes a matrix.
