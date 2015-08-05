@@ -5,6 +5,10 @@
 // A work in progress, heavily influenced by gonum/matrix and my previous work
 // in relational algebra.  Currently only implements matrices of float64.
 
+// I had considered naming this just "matrix" and then renaming
+// MatrixLiteral and MatrixExp to Literal and Expression respectively, but
+// the name would collide with gonum/matrix, so I decided not to.
+
 package matrixexp
 
 import (
