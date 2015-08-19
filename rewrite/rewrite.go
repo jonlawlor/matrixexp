@@ -2,9 +2,10 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-package matrixexp
+package rewrite
 
 import (
+	"github.com/jonlawlor/matrixexp"
 	"reflect"
 )
 
@@ -21,21 +22,20 @@ type Compiler interface {
 	MustCompile(MatrixExp) MatrixExp
 }
 
-// Rewriter can convert one matrix expression to another.  It is intended for
-// use with NewRewrite to construct compilers.
+// Rewriter can convert one matrix expression to another.
 type Rewriter interface {
 	Rewrite(MatrixExp) MatrixExp
 }
 
-// Rewrite represents a rule for a compiler to follow.
-type rewrite struct {
+// template represents an example based rule for the compiler to follow.
+type template struct {
 	from reflect.Value
 	to   reflect.Value
 }
 
-// NewRewrite produces a rewrite rule from a matrix expression template.
-func NewRewrite(from, to MatrixExp) Rewriter {
-	return &rewrite{
+// Template produces a rewrite rule from a matrix expression template.
+func Template(from, to MatrixExp) Rewriter {
+	return &template{
 		from: follow(reflect.ValueOf(from)),
 		to:   follow(reflect.ValueOf(to)),
 	}
@@ -50,7 +50,7 @@ func follow(v reflect.Value) reflect.Value {
 }
 
 // Rewrite applies a rewrite rule to a matrix expression.
-func (r *rewrite) Rewrite(m1 MatrixExp) MatrixExp {
+func (r *template) Rewrite(m1 MatrixExp) MatrixExp {
 
 	// Determine if the matrix expression matches the rewrite rule.
 	// TODO(jonlawlor): implement some kind of reflection cache.
