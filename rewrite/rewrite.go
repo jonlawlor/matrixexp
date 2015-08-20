@@ -15,16 +15,16 @@ import (
 type Compiler interface {
 	// Compile transforms a matrix, or returns an error indicating a problem
 	// with either the matrix expression or the compiler.
-	Compile(MatrixExp) (MatrixExp, error)
+	Compile(matrixexp.MatrixExp) (matrixexp.MatrixExp, error)
 
 	// MustCompile is just like Compile, except that instead of returning an error
 	// it will panic if it encounters a problem.  It is intended for use in init()
-	MustCompile(MatrixExp) MatrixExp
+	MustCompile(matrixexp.MatrixExp) matrixexp.MatrixExp
 }
 
 // Rewriter can convert one matrix expression to another.
 type Rewriter interface {
-	Rewrite(MatrixExp) MatrixExp
+	Rewrite(matrixexp.MatrixExp) matrixexp.MatrixExp
 }
 
 // template represents an example based rule for the compiler to follow.
@@ -34,7 +34,7 @@ type template struct {
 }
 
 // Template produces a rewrite rule from a matrix expression template.
-func Template(from, to MatrixExp) Rewriter {
+func Template(from, to matrixexp.MatrixExp) Rewriter {
 	return &template{
 		from: follow(reflect.ValueOf(from)),
 		to:   follow(reflect.ValueOf(to)),
@@ -50,15 +50,10 @@ func follow(v reflect.Value) reflect.Value {
 }
 
 // Rewrite applies a rewrite rule to a matrix expression.
-func (r *template) Rewrite(m1 MatrixExp) MatrixExp {
+func (r *template) Rewrite(m1 matrixexp.MatrixExp) matrixexp.MatrixExp {
 
 	// Determine if the matrix expression matches the rewrite rule.
 	// TODO(jonlawlor): implement some kind of reflection cache.
 	m2 := m1.Copy()
-	r.apply(reflect.ValueOf(m2))
 	return m2
-}
-
-func (r *rewrite) apply(v reflect.Value) {
-
 }
