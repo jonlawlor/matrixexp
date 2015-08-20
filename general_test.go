@@ -491,7 +491,7 @@ func TestEquals(t *testing.T) {
 		},
 	} {
 		if v := Equals(tt.m1, tt.m2); v != tt.eq {
-			t.Errorf("%d: Equals(%v,%v) equals %v, want %v", ti, tt.m1, tt.m2, tt.eq, v)
+			t.Errorf("%d: Equals(%v,%v) equals %v, want %v", ti, tt.m1, tt.m2, v, tt.eq)
 		}
 	}
 }
