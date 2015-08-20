@@ -99,10 +99,8 @@ func (m1 *Add) Sub(m2 MatrixExp) MatrixExp {
 
 // Scale performs scalar multiplication.
 func (m1 *Add) Scale(c float64) MatrixExp {
-	C := new(float64)
-	*C = c
 	return &Scale{
-		C: C,
+		C: c,
 		M: m1,
 	}
 }
