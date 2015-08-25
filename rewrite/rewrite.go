@@ -24,7 +24,7 @@ type Compiler interface {
 
 // Rewriter can convert one matrix expression to another.
 type Rewriter interface {
-	Rewrite(matrixexp.MatrixExp) matrixexp.MatrixExp
+	Rewrite(matrixexp.MatrixExp) (matrixexp.MatrixExp, error)
 }
 
 // template represents an example based rule for the compiler to follow.
@@ -36,24 +36,16 @@ type template struct {
 // Template produces a rewrite rule from a matrix expression template.
 func Template(from, to matrixexp.MatrixExp) Rewriter {
 	return &template{
-		from: follow(reflect.ValueOf(from)),
-		to:   follow(reflect.ValueOf(to)),
+		from: reflect.ValueOf(from),
+		to:   reflect.ValueOf(to),
 	}
-}
-
-// Follow any pointers until we reach a concrete type or nil.
-func follow(v reflect.Value) reflect.Value {
-	for k := v.Kind(); k == reflect.Ptr; k = v.Kind() {
-		v = v.Elem()
-	}
-	return v
 }
 
 // Rewrite applies a rewrite rule to a matrix expression.
-func (r *template) Rewrite(m1 matrixexp.MatrixExp) matrixexp.MatrixExp {
+func (r *template) Rewrite(m1 matrixexp.MatrixExp) (matrixexp.MatrixExp, error) {
 
 	// Determine if the matrix expression matches the rewrite rule.
 	// TODO(jonlawlor): implement some kind of reflection cache.
 	m2 := m1.Copy()
-	return m2
+	return m2, nil
 }
