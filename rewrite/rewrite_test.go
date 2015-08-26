@@ -69,10 +69,10 @@ func TestRewrite(t *testing.T) {
 
 	if err != nil {
 		t.Errorf("non-nil error encountered during rewrite: %v", err)
+		return
 	}
 	// Check that ExFrom and ExTo are equivalent
 	if v := matrixexp.Equals(ExFrom, ExTo); v != true {
 		t.Errorf("Equals(%v,%v) equals %v, want %v", ExFrom, ExTo, v, true)
 	}
-
 }
