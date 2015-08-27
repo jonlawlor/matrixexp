@@ -57,8 +57,8 @@ func eye(r int) blas64.General {
 
 func TestRewrite(t *testing.T) {
 	// Generate an example rewrite rule: (AnyA.T()).Add(AnyB.T()) -> (AnyA.Add(AnyB)).T()
-	AnyA := &AnyExp{}
-	AnyB := &AnyExp{}
+	AnyA := new(AnyExp)
+	AnyB := new(AnyExp)
 	AddRewrite := Template((AnyA.T()).Add(AnyB.T()), (AnyA.Add(AnyB).T()))
 
 	ExA := GeneralZeros(10, 1)

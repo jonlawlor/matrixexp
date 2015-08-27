@@ -11,7 +11,11 @@ import (
 // AnyExp represents any matrix expression.  It is intended for use with the
 // Template rewriter.  It implements matrix algebra but if it is ever used for
 // calculations it will cause a runtime panic.
-type AnyExp struct{}
+// Note that this is an int so that it actually takes up memory - this is
+// intentional.  Go puts zero sized structs into the same address, which is no
+// good if we want to compare their memory location to determine identity for
+// wildcard matching.
+type AnyExp int
 
 // Dims returns the matrix dimensions.
 func (m1 *AnyExp) Dims() (r, c int) {
@@ -30,7 +34,7 @@ func (m1 *AnyExp) Eval() matrixexp.MatrixLiteral {
 
 // Copy creates a (deep) copy of the Matrix Expression.
 func (m1 *AnyExp) Copy() matrixexp.MatrixExp {
-	return &AnyExp{}
+	return new(AnyExp)
 }
 
 // Err returns the first error encountered while constructing the matrix expression.

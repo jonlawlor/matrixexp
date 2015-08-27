@@ -70,7 +70,6 @@ func (r *template) Rewrite(m1 matrixexp.MatrixExp) (matrixexp.MatrixExp, error) 
 // modifies the map to contain the mapping between the input matrix expression
 // and the template output.
 func matches(m1, from matrixexp.MatrixExp, matMap map[matrixexp.MatrixExp]matrixexp.MatrixExp) error {
-	// jonlawlor: would this be better returning an error?
 	if w, ok := from.(Matcher); ok {
 		// from is a wildcard, so it can be directly compared
 		if err := w.Match(m1); err != nil {
@@ -79,11 +78,11 @@ func matches(m1, from matrixexp.MatrixExp, matMap map[matrixexp.MatrixExp]matrix
 		// Determine if we have seen the expression before.
 		if to, seen := matMap[from]; !seen {
 			matMap[from] = m1
-		} else if to != m1 {
+		} else if seen && m1 != to {
 			return &NewExpMismatch{m1, to}
 		}
-		// I'm not sure if a wlldcard should have subexpressions.  For now we'll
-		// assume no.
+		// I'm not sure if a wlldcard should have subexpressions.  For now assume
+		// no, and we can always add the capability later.
 		return nil
 	}
 	// Determine if m1 and from are the same matrix operation.
