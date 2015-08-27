@@ -93,7 +93,7 @@ func (m1 *AnyExp) DivElem(m2 matrixexp.MatrixExp) matrixexp.MatrixExp {
 
 // Match determines if a matrix expression wildcard matches another matrix
 // expression.
-func (m1 *AnyExp) Match(m2 matrixexp.MatrixExp) bool {
+func (m1 *AnyExp) Match(m2 matrixexp.MatrixExp) error {
 	// AnyExp matches all other expressions.
-	return true
+	return nil
 }
