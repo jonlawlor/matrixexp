@@ -58,9 +58,6 @@ func (r *template) Rewrite(m1 matrixexp.MatrixExp) (matrixexp.MatrixExp, error) 
 	m2 := m1.Copy()
 	matMap := make(map[matrixexp.MatrixExp]matrixexp.MatrixExp)
 	if err := matches(m1, r.from, matMap); err != nil {
-		// TODO(jonlawlor): implement useful error message.  This is just a placeholder.
-		// We'll probably need a better way of converting a matrix expression to a
-		// string.
 		return nil, err
 	}
 	return m2, nil
