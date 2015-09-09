@@ -32,9 +32,11 @@ func (m1 *AnyExp) Eval() matrixexp.MatrixLiteral {
 	panic("cannot evaluate an AnyExpr")
 }
 
-// Copy creates a (deep) copy of the Matrix Expression.
+// Copy normally creates a (deep) copy of the Matrix Expression.  However, to
+// aid in rewriting expressions, Copy() of matrix expression wildcards is a nop.
 func (m1 *AnyExp) Copy() matrixexp.MatrixExp {
-	return new(AnyExp)
+	// Copy of AnyExp does not produce a new value.
+	return m1
 }
 
 // Err returns the first error encountered while constructing the matrix expression.

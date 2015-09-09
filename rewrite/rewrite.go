@@ -10,6 +10,12 @@ import (
 	"reflect"
 )
 
+var rMatrixExp reflect.Type
+
+func init() {
+	rMatrixExp = reflect.TypeOf((*matrixexp.MatrixExp)(nil)).Elem()
+}
+
 // A Compiler can transform matrix expressions by applying various optimizations
 // to it, such as converting a.T().Mul(b.T()) to an appropriate call to DGEMM,
 // or allowing concurrent evaluation of (a.Mul(b)).Add(c.Mul(d)) via Async.
@@ -52,15 +58,17 @@ func Template(from, to matrixexp.MatrixExp) Rewriter {
 // Rewrite applies a rewrite rule to a matrix expression.  If it can't be applied
 // to the input expression, then it returns an error.
 func (r *template) Rewrite(m1 matrixexp.MatrixExp) (matrixexp.MatrixExp, error) {
+	// TODO(jonlawlor): it might be faster to keep everything in reflection.
+	// TODO(jonlawlor): implement some kind of reflection cache.
 
 	// Determine if the matrix expression matches the rewrite rule.
-	// TODO(jonlawlor): implement some kind of reflection cache.
-	m2 := m1.Copy()
 	matMap := make(map[matrixexp.MatrixExp]matrixexp.MatrixExp)
 	if err := matches(m1, r.from, matMap); err != nil {
 		return nil, err
 	}
-	return m2, nil
+
+	// Construct a new matrix expression with the mapping from the rewrite rule.
+	return construct(r.to.Copy(), matMap)
 }
 
 // matches returns true if the matrix expression matches the template.  It also
@@ -93,8 +101,8 @@ func matches(m1, from matrixexp.MatrixExp, matMap map[matrixexp.MatrixExp]matrix
 	rfrom = follow(rfrom)
 	for i := 0; i < rfrom.NumField(); i++ {
 		// if rfrom is a matrix expression, call matches on it as well
-		if f := rfrom.Field(i); f.Type().Implements(reflect.TypeOf((*matrixexp.MatrixExp)(nil)).Elem()) {
-			if err := matches(f.Interface().(matrixexp.MatrixExp), rm1.Field(i).Interface().(matrixexp.MatrixExp), matMap); err != nil {
+		if rf := rfrom.Field(i); rf.Type().Implements(rMatrixExp) {
+			if err := matches(rf.Interface().(matrixexp.MatrixExp), rm1.Field(i).Interface().(matrixexp.MatrixExp), matMap); err != nil {
 				return err
 			}
 		}
@@ -102,6 +110,33 @@ func matches(m1, from matrixexp.MatrixExp, matMap map[matrixexp.MatrixExp]matrix
 	return nil
 }
 
+// construct takes an example matrix expression and a map from example elements
+// to realized elements (populated by the matches function) and creates a new
+// matrix expression with the same form as to but with the elements defined
+// in the matMap.
+func construct(to matrixexp.MatrixExp, matMap map[matrixexp.MatrixExp]matrixexp.MatrixExp) (matrixexp.MatrixExp, error) {
+	if r, seen := matMap[to]; seen {
+		// we have a wildcard match / leaf
+		return r, nil
+	}
+
+	// Walk subexpressions.
+	rto := reflect.ValueOf(to)
+	rto = follow(rto)
+	for i := 0; i < rto.NumField(); i++ {
+		// if rto is a matrix expression, call construct on it as well
+		if rf := rto.Field(i); rf.Type().Implements(rMatrixExp) {
+			exp, err := construct(rf.Interface().(matrixexp.MatrixExp), matMap)
+			if err != nil {
+				return exp, err
+			}
+			rf.Set(reflect.ValueOf(exp))
+		}
+	}
+	return to, nil
+}
+
+// Follow pointers.
 func follow(r1 reflect.Value) reflect.Value {
 	for ; r1.Kind() == reflect.Ptr; r1 = r1.Elem() {
 	}

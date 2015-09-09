@@ -60,7 +60,6 @@ func TestRewrite(t *testing.T) {
 	AnyA := new(AnyExp)
 	AnyB := new(AnyExp)
 	AddRewrite := Template((AnyA.T()).Add(AnyB.T()), (AnyA.Add(AnyB).T()))
-
 	ExA := GeneralZeros(10, 1)
 	ExB := GeneralOnes(10, 1)
 	ExFrom := (ExA.T()).Add(ExB.T())
