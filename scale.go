@@ -6,12 +6,18 @@ package matrixexp
 
 import (
 	"github.com/gonum/blas/blas64"
+	"strconv"
 )
 
 // Scale represents scalar multiplication.
 type Scale struct {
 	C float64
 	M MatrixExp
+}
+
+// String implements the Stringer interface.
+func (m1 *Scale) String() string {
+	return m1.M.String() + ".Scale(" + strconv.FormatFloat(m1.C, 'g', -1, 64) + ")"
 }
 
 // Dims returns the matrix dimensions.

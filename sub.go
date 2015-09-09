@@ -14,6 +14,11 @@ type Sub struct {
 	Right MatrixExp
 }
 
+// String implements the Stringer interface.
+func (m1 *Sub) String() string {
+	return m1.Left.String() + ".Sub(" + m1.Right.String() + ")"
+}
+
 // Dims returns the matrix dimensions.
 func (m1 *Sub) Dims() (r, c int) {
 	r, c = m1.Left.Dims()

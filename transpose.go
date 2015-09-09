@@ -13,6 +13,11 @@ type T struct {
 	M MatrixExp
 }
 
+// String implements the Stringer interface.
+func (m1 *T) String() string {
+	return m1.M.String() + ".T()"
+}
+
 // Dims returns the matrix dimensions.
 func (m1 *T) Dims() (r, c int) {
 	c, r = m1.M.Dims()

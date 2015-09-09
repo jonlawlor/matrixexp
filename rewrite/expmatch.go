@@ -17,6 +17,11 @@ import (
 // wildcard matching.
 type AnyExp int
 
+// String implements the Stringer interface.
+func (m1 *AnyExp) String() string {
+	return "Any"
+}
+
 // Dims returns the matrix dimensions.
 func (m1 *AnyExp) Dims() (r, c int) {
 	return 0, 0

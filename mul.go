@@ -15,6 +15,11 @@ type Mul struct {
 	Right MatrixExp
 }
 
+// String implements the Stringer interface.
+func (m1 *Mul) String() string {
+	return m1.Left.String() + ".Mul(" + m1.Right.String() + ")"
+}
+
 // Dims returns the matrix dimensions.
 func (m1 *Mul) Dims() (r, c int) {
 	r, _ = m1.Left.Dims()

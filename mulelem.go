@@ -14,6 +14,11 @@ type MulElem struct {
 	Right MatrixExp
 }
 
+// String implements the Stringer interface.
+func (m1 *MulElem) String() string {
+	return m1.Left.String() + ".MulElem(" + m1.Right.String() + ")"
+}
+
 // Dims returns the matrix dimensions.
 func (m1 *MulElem) Dims() (r, c int) {
 	r, c = m1.Left.Dims()

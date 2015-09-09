@@ -17,6 +17,8 @@ import (
 
 // MatrixExp represents any mathematical matrix expression, and defines its Algebra.
 type MatrixExp interface {
+	// Stringer interface
+	String() string
 
 	// not a part of the algebra, but very helpful
 	Dims() (r, c int)    // matrix dimensions

@@ -5,12 +5,18 @@
 package matrixexp
 
 import (
+	"fmt"
 	"github.com/gonum/blas/blas64"
 )
 
 // General is a typical matrix literal.
 type General struct {
 	blas64.General
+}
+
+// String implements the Stringer interface.
+func (m1 *General) String() string {
+	return fmt.Sprintf("%#v", m1)
 }
 
 // Dims returns the matrix dimensions.

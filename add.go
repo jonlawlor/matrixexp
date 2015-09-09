@@ -14,6 +14,11 @@ type Add struct {
 	Right MatrixExp
 }
 
+// String implements the Stringer interface.
+func (m1 *Add) String() string {
+	return m1.Left.String() + ".Add(" + m1.Right.String() + ")"
+}
+
 // Dims returns the matrix dimensions.
 func (m1 *Add) Dims() (r, c int) {
 	r, c = m1.Left.Dims()

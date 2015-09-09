@@ -6,6 +6,7 @@ package matrixexp
 
 import (
 	"github.com/gonum/blas/blas64"
+	"strconv"
 )
 
 // NewFuture constructs a Future MatrixLiteral from a Matrix Expression and
@@ -31,6 +32,11 @@ type Future struct {
 	r, c int
 	ch   <-chan struct{}
 	m    MatrixLiteral
+}
+
+// String implements the Stringer interface.
+func (m1 *Future) String() string {
+	return "Future{" + strconv.Itoa(m1.r) + ", " + strconv.Itoa(m1.c) + "}"
 }
 
 // Dims returns the matrix dimensions.

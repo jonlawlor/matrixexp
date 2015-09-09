@@ -9,6 +9,11 @@ type Async struct {
 	M MatrixExp
 }
 
+// String implements the Stringer interface.
+func (m1 *Async) String() string {
+	return "Async{" + m1.M.String() + "}"
+}
+
 // Dims returns the matrix dimensions.
 func (m1 *Async) Dims() (r, c int) {
 	r, c = m1.M.Dims()

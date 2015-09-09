@@ -14,6 +14,11 @@ type DivElem struct {
 	Right MatrixExp
 }
 
+// String implements the Stringer interface.
+func (m1 *DivElem) String() string {
+	return m1.Left.String() + ".DivElem(" + m1.Right.String() + ")"
+}
+
 // Dims returns the matrix dimensions.
 func (m1 *DivElem) Dims() (r, c int) {
 	r, c = m1.Left.Dims()
